@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import TripDetailView from '../views/TripDetailView.vue'
+import TripItineraryView from '../views/TripItineraryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,9 +9,24 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: HomeView
     },
-  ],
+    {
+      // Parent cesta pre detail výletu
+      path: '/trip/:id',
+      name: 'trip-detail',
+      component: TripDetailView,
+      props: true,
+      children: [
+        {
+          path: 'itinerary',
+          name: 'trip-itinerary',
+          component: TripItineraryView,
+          props: true
+        }
+      ]
+    }
+  ]
 })
 
 export default router
