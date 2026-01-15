@@ -1,8 +1,12 @@
 <script lang="ts">
 import { useTripStore } from '../stores/trip'
+import BudgetSummary from '../components/BudgetSummary.vue'
 
 export default {
   name: 'TripDetailView',
+  components: {
+    BudgetSummary
+  },
   props: ['id'],
   computed: {
     trip() {
@@ -16,123 +20,124 @@ export default {
 <template>
   <div v-if="trip" class="detail-layout">
     <header class="detail-header">
-      <router-link to="/" class="back-link">← Zoznam výletov</router-link>
+      <router-link to="/" class="back-link">← Späť na zoznam výletov</router-link>
       <h1>{{ trip.title }}</h1>
     </header>
 
     <div class="detail-hero">
-      <img :src="trip.image" :alt="trip.title" class="hero-img">
-      <div class="hero-info">
-        <div class="budget-info">
-          <span>Celkový rozpočet:</span>
-          <strong>{{ trip.budget }} €</strong>
-        </div>
-        <nav class="detail-nav">
-          <router-link :to="'/trip/' + id + '/itinerary'" class="nav-item">
-            Plán cesty
+      <div class="hero-image-container">
+        <img :src="trip.image" :alt="trip.title" class="hero-img">
+      </div>
+
+      <div class="hero-content">
+        <p class="trip-desc">{{ trip.description }}</p>
+
+        <BudgetSummary
+          :totalBudget="trip.budget"
+          :itinerary="trip.itinerary"
+        />
+
+        <nav class="sub-navigation">
+          <router-link :to="'/trip/' + id + '/itinerary'" class="nav-btn">
+            Zobraziť itinerár
           </router-link>
         </nav>
       </div>
     </div>
 
-    <main class="detail-content">
+    <main class="detail-main-content">
       <router-view />
     </main>
   </div>
 
   <div v-else class="not-found">
-    <p>Výlet sa nenašiel.</p>
-    <router-link to="/">Späť domov</router-link>
+    <h2>Výlet sa nenašiel</h2>
+    <router-link to="/">Vrátiť sa na hlavnú stránku</router-link>
   </div>
 </template>
 
 <style scoped>
 .detail-layout {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
 
 .detail-header {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .back-link {
   color: #42b983;
   text-decoration: none;
   font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .detail-hero {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
   background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 30px;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
 }
 
 .hero-img {
-  width: 250px;
-  height: 150px;
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-.hero-info {
-  flex: 1;
+.hero-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.budget-info {
-  font-size: 1.1rem;
+.trip-desc {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
-.budget-info strong {
-  color: #42b983;
-  font-size: 1.3rem;
-  margin-left: 5px;
+.sub-navigation {
+  margin-top: 25px;
 }
 
-.detail-nav {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.nav-item {
-  padding: 8px 16px;
-  background: #eee;
-  color: #333;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: 500;
-}
-
-/* Štýl pre aktívny odkaz v menu */
-.router-link-active.nav-item {
-  background: #42b983;
+.nav-btn {
+  display: inline-block;
+  padding: 12px 20px;
+  background: #2c3e50;
   color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
 }
 
-.detail-content {
-  margin-top: 20px;
+.router-link-active.nav-btn {
+  background: #42b983;
+}
+
+.detail-main-content {
+  background: #fdfdfd;
+  border-radius: 15px;
 }
 
 .not-found {
   text-align: center;
-  margin-top: 50px;
+  padding: 100px 20px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .detail-hero {
-    flex-direction: column;
-  }
-  .hero-img {
-    width: 100%;
+    grid-template-columns: 1fr;
   }
 }
 </style>
