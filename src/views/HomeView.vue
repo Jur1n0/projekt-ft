@@ -133,6 +133,10 @@ export default {
   font-weight: bold;
 }
 
+.btn-primary:hover{
+  background: #42b983;
+}
+
 .form-container {
   background-color: #f9f9f9;
   padding: 2rem;

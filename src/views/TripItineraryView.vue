@@ -54,11 +54,11 @@ export default {
 
 <template>
   <div v-if="trip" class="itinerary-box">
-    <h3>Môj plán cesty</h3>
+    <h3>Itinerár</h3>
 
     <div class="add-item-form">
-      <BaseInput v-model="newItem.place" label="Názov miesta" placeholder="Kam pôjdeme?" />
-
+      <h3>Pridať nový záznam</h3>
+      <BaseInput v-model="newItem.place" label="Názov miesta *" placeholder="Kam pôjdeme?" />
       <div class="form-row">
         <div class="input-group">
           <label>Typ</label>
@@ -87,6 +87,13 @@ export default {
 </template>
 
 <style scoped>
+h3{
+  color: #42b983;
+  font-size: 1.7rem;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
 .itinerary-box {
   background: #fff;
   padding: 20px;
@@ -100,6 +107,13 @@ export default {
   border-radius: 8px;
   margin-bottom: 20px;
   border: 1px solid #eee;
+}
+
+.add-item-form h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 1.3rem;
 }
 
 .form-row {
@@ -137,6 +151,10 @@ export default {
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+}
+
+.btn-add:hover{
+  background: #42b983;
 }
 
 .items-list {

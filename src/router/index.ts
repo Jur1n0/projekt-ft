@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import TripDetailView from '../views/TripDetailView.vue'
 import TripItineraryView from '../views/TripItineraryView.vue'
 import TipView from '../views/TipView.vue'
+import GalleryView from '../views/GalleryView.vue'
+import TripGalleryView from '../views/TripGalleryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +26,12 @@ const router = createRouter({
           name: 'trip-itinerary',
           component: TripItineraryView,
           props: true
+        },
+        {
+          path: 'gallery',
+          name: 'trip-gallery',
+          component: TripGalleryView,
+          props: true
         }
       ]
     },
@@ -31,6 +39,11 @@ const router = createRouter({
       path: '/tips',
       name: 'tips',
       component: TipView
+    },
+    {
+      path: '/gallery',
+      name: 'gallery',
+      component: GalleryView
     }
   ]
 })

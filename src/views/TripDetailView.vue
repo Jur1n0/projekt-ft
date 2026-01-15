@@ -60,6 +60,11 @@ export default {
             Zobraziť itinerár
           </router-link>
         </nav>
+        <nav class="sub-navigation">
+          <router-link :to="'/trip/' + id + '/gallery'" class="nav-btn secondary">
+            Zobraziť galériu
+          </router-link>
+        </nav>
       </div>
     </div>
 
@@ -70,6 +75,22 @@ export default {
 </template>
 
 <style scoped>
+.hero-image-container {
+  width: 100%;
+  height: 300px; /* Fixná výška pre zachovanie konzistencie */
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: #eee; /* Pozadie, kým sa fotka načíta */
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Najdôležitejšia časť: oreže fotku bez deformácie */
+  display: block;
+  transition: opacity 0.3s ease-in-out;
+}
+
 .detail-hero {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Pružnejší grid */
@@ -117,6 +138,10 @@ export default {
   text-decoration: none;
   border-radius: 8px;
   text-align: center;
+}
+
+.nav-btn:hover{
+  background: #42b983;
 }
 
 .back-link {
