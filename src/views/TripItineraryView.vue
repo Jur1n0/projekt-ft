@@ -26,8 +26,15 @@ export default {
     }
   },
   methods: {
+    removeItem(itemId: number) {
+      const tripStore = useTripStore()
+      tripStore.deleteItineraryItem(Number(this.id), itemId)
+    },
     addItem() {
-      if (this.newItem.place.trim() === '') return
+      if (this.newItem.place.trim() === ''){
+        alert('Prosím, zadajte názov miesta.')
+        return
+      }
 
       const tripStore = useTripStore()
       tripStore.addItineraryItem(Number(this.id), {
@@ -73,6 +80,7 @@ export default {
         v-for="item in trip.itinerary"
         :key="item.id"
         :item="item"
+        @delete="removeItem"
       />
     </div>
   </div>

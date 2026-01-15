@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import TripDetailView from '../views/TripDetailView.vue'
 import TripItineraryView from '../views/TripItineraryView.vue'
+import TipView from '../views/TipView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,11 @@ const router = createRouter({
           props: true
         }
       ]
+    },
+    {
+      path: '/tips',
+      name: 'tips',
+      component: TipView
     }
   ]
 })

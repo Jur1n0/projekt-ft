@@ -16,7 +16,10 @@ export default {
       <span class="item-type">{{ item.type }}</span>
       <span class="item-place">{{ item.place }}</span>
     </div>
-    <span class="item-price">{{ item.price }} €</span>
+    <div class="item-right">
+      <span class="item-price">{{ item.price }} €</span>
+      <button class="btn-delete-small" @click="$emit('delete', item.id)">✕</button>
+    </div>
   </div>
 </template>
 
@@ -53,5 +56,20 @@ export default {
 .item-price {
   font-weight: bold;
   color: #2c3e50;
+}
+
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-delete-small {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 5px;
 }
 </style>

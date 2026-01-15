@@ -61,6 +61,22 @@ export const useTripStore = defineStore('tripStore', {
         trip.itinerary.push(item)
         localStorage.setItem('my_trips', JSON.stringify(this.trips))
       }
+    },
+
+    deleteItineraryItem(tripId: number, itemId: number) {
+      const trip = this.trips.find(t => t.id === tripId)
+      if (trip) {
+        trip.itinerary = trip.itinerary.filter(item => item.id !== itemId)
+        localStorage.setItem('my_trips', JSON.stringify(this.trips))
+      }
+    },
+
+    updateTripBudget(tripId: number, newBudget: number) {
+      const trip = this.trips.find(t => t.id === tripId)
+      if (trip) {
+        trip.budget = newBudget
+        localStorage.setItem('my_trips', JSON.stringify(this.trips))
+      }
     }
   }
 })

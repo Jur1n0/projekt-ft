@@ -1,17 +1,31 @@
 <script lang="ts">
 import { useTripStore } from '../stores/trip'
 import BudgetSummary from '../components/BudgetSummary.vue'
+import BaseInput from '../components/BaseInput.vue'
 
 export default {
   name: 'TripDetailView',
-  components: {
-    BudgetSummary
-  },
+  components: { BudgetSummary, BaseInput },
   props: ['id'],
+  data() {
+    return {
+      isEditingBudget: false,
+      tempBudget: 0
+    }
+  },
   computed: {
     trip() {
-      const tripStore = useTripStore()
-      return tripStore.getTripById(this.id)
+      return useTripStore().getTripById(this.id)
+    }
+  },
+  methods: {
+    startEditBudget() {
+      this.tempBudget = this.trip.budget
+      this.isEditingBudget = true
+    },
+    saveBudget() {
+      useTripStore().updateTripBudget(Number(this.id), this.tempBudget)
+      this.isEditingBudget = false
     }
   }
 }
@@ -20,7 +34,9 @@ export default {
 <template>
   <div v-if="trip" class="detail-layout">
     <header class="detail-header">
-      <router-link to="/" class="back-link">← Späť na zoznam výletov</router-link>
+      <router-link to="/" class="back-link">
+          ← Späť na zoznam
+      </router-link>
       <h1>{{ trip.title }}</h1>
     </header>
 
@@ -30,12 +46,14 @@ export default {
       </div>
 
       <div class="hero-content">
-        <p class="trip-desc">{{ trip.description }}</p>
-
-        <BudgetSummary
-          :totalBudget="trip.budget"
-          :itinerary="trip.itinerary"
-        />
+        <div v-if="!isEditingBudget" class="budget-display">
+          <BudgetSummary :totalBudget="trip.budget" :itinerary="trip.itinerary" />
+          <button class="btn-edit-small" @click="startEditBudget">Upraviť rozpočet</button>
+        </div>
+        <div v-else class="budget-edit">
+          <BaseInput v-model.number="tempBudget" type="number" label="Nový rozpočet" />
+          <button class="btn-save" @click="saveBudget">Uložiť</button>
+        </div>
 
         <nav class="sub-navigation">
           <router-link :to="'/trip/' + id + '/itinerary'" class="nav-btn">
@@ -49,95 +67,66 @@ export default {
       <router-view />
     </main>
   </div>
-
-  <div v-else class="not-found">
-    <h2>Výlet sa nenašiel</h2>
-    <router-link to="/">Vrátiť sa na hlavnú stránku</router-link>
-  </div>
 </template>
 
 <style scoped>
-.detail-layout {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.detail-header {
-  margin-bottom: 30px;
-}
-
-.back-link {
-  color: #42b983;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
 .detail-hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Pružnejší grid */
   gap: 30px;
   background: white;
   padding: 25px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   margin-bottom: 40px;
-}
-
-.hero-img {
-  width: 100%;
-  height: 100%;
-  min-height: 250px;
-  object-fit: cover;
-  border-radius: 10px;
+  min-height: min-content; /* Zabráni pretekaniu */
 }
 
 .hero-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* Zarovnanie na začiatok */
+  gap: 15px;
 }
 
-.trip-desc {
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 20px;
+.btn-edit-small {
+  background: #42b983;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
 }
 
-.sub-navigation {
-  margin-top: 25px;
+.btn-save {
+  background: #42b983;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
 }
 
 .nav-btn {
-  display: inline-block;
-  padding: 12px 20px;
+  display: block;
+  padding: 12px;
   background: #2c3e50;
   color: white;
   text-decoration: none;
   border-radius: 8px;
-  font-weight: bold;
   text-align: center;
-  width: 100%;
 }
 
-.router-link-active.nav-btn {
-  background: #42b983;
-}
+.back-link {
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
 
-.detail-main-content {
-  background: #fdfdfd;
-  border-radius: 15px;
-}
-
-.not-found {
-  text-align: center;
-  padding: 100px 20px;
-}
-
-@media (max-width: 768px) {
-  .detail-hero {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

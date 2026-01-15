@@ -35,6 +35,10 @@ export default {
 <template>
   <div class="budget-summary" :class="{ 'over-budget': isOverBudget }">
     <div class="summary-item">
+      <span>Rozpočet:</span>
+      <strong>{{ totalBudget }} €</strong>
+    </div>
+    <div class="summary-item">
       <span>Minuté:</span>
       <strong>{{ totalSpent }} €</strong>
     </div>
