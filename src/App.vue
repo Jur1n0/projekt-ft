@@ -16,6 +16,8 @@ export default {
           <router-link to="/" class="nav-link">Moje výlety</router-link>
           <router-link to="/tips" class="nav-link">Top tipy</router-link>
           <router-link to="/gallery" class="nav-link">Galéria</router-link>
+          <router-link to="/stats" class="nav-link">Štatistiky</router-link>
+          <router-link to="/history" class="nav-link">Historia</router-link>
         </nav>
       </div>
     </header>

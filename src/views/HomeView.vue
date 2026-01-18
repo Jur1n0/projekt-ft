@@ -23,8 +23,7 @@ export default {
   computed: {
     trips() {
       const tripStore = useTripStore()
-      return tripStore.allTrips
-    }
+      return tripStore.allTrips.filter(t => !t.completed)    }
   },
   methods: {
     toggleForm() {
@@ -46,7 +45,10 @@ export default {
       tripStore.addTrip({
         ...this.newTrip,
         id: Date.now(),
-        itinerary: []
+        itinerary: [],
+        photos: [],
+        completed: false,
+        memories: ''
       })
 
       this.resetForm()

@@ -47,6 +47,9 @@ export default {
   border-radius: 10px;
   margin-right: 12px;
   font-weight: bold;
+  display: inline-block;
+  width: 100px;        /* Nastav podľa najdlhšieho slova (UBYTOVANIE) */
+  text-align: center;   /* Voliteľné: vycentruje text vnútri štítka */
 }
 
 .item-place {

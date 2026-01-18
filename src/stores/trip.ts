@@ -21,6 +21,8 @@ export interface Trip {
   budget: number
   itinerary: ItineraryItem[]
   photos: TripPhoto[]
+  completed: boolean
+  memories?: string
 }
 
 
@@ -31,9 +33,47 @@ export const useTripStore = defineStore('tripStore', {
   }),
 
   getters: {
+    // Základné získavanie dát
     allTrips: (state) => state.trips,
     getTripById: (state) => {
       return (tripId: number | string) => state.trips.find(t => t.id === Number(tripId))
+    },
+
+    // Počty výletov podľa stavu
+    totalTripsCount: (state) => state.trips.length,
+    completedTripsCount: (state) => state.trips.filter(t => t.completed).length,
+    activeTripsCount: (state) => state.trips.filter(t => !t.completed).length,
+
+    // Globálne finančné štatistiky
+    totalGlobalBudget: (state) =>
+      state.trips.reduce((sum, trip) => sum + (trip.budget || 0), 0),
+
+    totalGlobalSpent: (state) =>
+      state.trips.reduce((sum, trip) => {
+        const tripSpent = trip.itinerary?.reduce((iSum, item) => iSum + item.price, 0) || 0;
+        return sum + tripSpent;
+      }, 0),
+
+    // Rozpočty rozdelené podľa stavu výletu
+    totalBudgetCompleted: (state) =>
+      state.trips.filter(t => t.completed).reduce((sum, t) => sum + (t.budget || 0), 0),
+
+    totalBudgetActive: (state) =>
+      state.trips.filter(t => !t.completed).reduce((sum, t) => sum + (t.budget || 0), 0),
+
+    // Ostatné zaujímavosti
+    totalPhotosCount: (state) =>
+      state.trips.reduce((sum, trip) => sum + (trip.photos?.length || 0), 0),
+
+    averageTripBudget: (state) => {
+      if (state.trips.length === 0) return 0;
+      const total = state.trips.reduce((sum, t) => sum + (t.budget || 0), 0);
+      return Math.round(total / state.trips.length);
+    },
+
+    mostExpensiveTrip: (state) => {
+      if (state.trips.length === 0) return null;
+      return [...state.trips].sort((a, b) => b.budget - a.budget)[0];
     }
   },
 
@@ -43,7 +83,11 @@ export const useTripStore = defineStore('tripStore', {
     },
 
     addTrip(trip: Trip) {
-      this.trips.push(trip)
+      this.trips.push({
+        ...trip,
+        completed: false,
+        memories: ''
+      })
       this.saveToLocalStorage()
     },
 
@@ -101,6 +145,15 @@ export const useTripStore = defineStore('tripStore', {
         trip.image = (trip.image === photoUrl) ? defaultIllustration : photoUrl;
         this.saveToLocalStorage();
       }
-    }
-  }
+    },
+
+    updateTripStatus(tripId: number, status: boolean, memories: string = '') {
+      const trip = this.trips.find(t => t.id === tripId)
+      if (trip) {
+        trip.completed = status
+        trip.memories = memories
+        this.saveToLocalStorage()
+      }
+    },
+  },
 })
