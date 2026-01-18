@@ -7,7 +7,7 @@ export default {
   name: 'TripItineraryView',
   components: {
     ItineraryItem,
-    BaseInput
+    BaseInput,
   },
   props: ['id'],
   data() {
@@ -15,15 +15,15 @@ export default {
       newItem: {
         place: '',
         type: 'Pamiatka',
-        price: 0
-      }
+        price: 0,
+      },
     }
   },
   computed: {
     trip() {
       const tripStore = useTripStore()
       return tripStore.getTripById(this.id)
-    }
+    },
   },
   methods: {
     removeItem(itemId: number) {
@@ -31,7 +31,7 @@ export default {
       tripStore.deleteItineraryItem(Number(this.id), itemId)
     },
     addItem() {
-      if (this.newItem.place.trim() === ''){
+      if (this.newItem.place.trim() === '') {
         alert('Prosím, zadajte názov miesta.')
         return
       }
@@ -39,16 +39,16 @@ export default {
       const tripStore = useTripStore()
       tripStore.addItineraryItem(Number(this.id), {
         ...this.newItem,
-        id: Date.now()
+        id: Date.now(),
       })
 
       this.newItem = {
         place: '',
         type: 'Pamiatka',
-        price: 0
+        price: 0,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -58,7 +58,7 @@ export default {
 
     <div class="add-item-form">
       <h3>Pridať nový záznam</h3>
-      <BaseInput v-model="newItem.place" label="Názov miesta *" placeholder="Kam pôjdeme?" />
+      <BaseInput v-model="newItem.place" label="Názov záznamu *" placeholder="Čo pridávame?" />
       <div class="form-row">
         <div class="input-group">
           <label>Typ</label>
@@ -69,7 +69,7 @@ export default {
             <option>Ubytovanie</option>
           </select>
         </div>
-        <BaseInput v-model.number="newItem.price" type="number" label="Cena (€)" step="10"/>
+        <BaseInput v-model.number="newItem.price" type="number" label="Cena (€)" step="10" />
       </div>
 
       <button @click="addItem" class="btn-add">Pridať do plánu</button>
@@ -87,7 +87,7 @@ export default {
 </template>
 
 <style scoped>
-h3{
+h3 {
   color: #42b983;
   font-size: 1.7rem;
   margin: 0;
@@ -98,7 +98,7 @@ h3{
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .add-item-form {
@@ -151,10 +151,12 @@ h3{
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+  transition: all 0.2s ease-in-out;
 }
 
-.btn-add:hover{
-  background: #42b983;
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 34, 34, 0.1);
 }
 
 .items-list {

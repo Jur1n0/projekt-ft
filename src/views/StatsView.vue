@@ -15,10 +15,10 @@ export default {
         avg: store.averageTripBudget,
         photos: store.totalPhotosCount,
         spent: store.totalGlobalSpent,
-        expensive: store.mostExpensiveTrip
+        expensive: store.mostExpensiveTrip,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -104,12 +104,14 @@ export default {
   background: white;
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   text-align: center;
   transition: transform 0.2s;
 }
 
-.stat-card:hover { transform: translateY(-5px); }
+.stat-card:hover {
+  transform: translateY(-5px);
+}
 
 .label {
   display: block;
@@ -135,16 +137,31 @@ export default {
   opacity: 0.9;
 }
 
-/* Farebné akcenty */
-.finished { border-top: 5px solid #42b983; }
-.active { border-top: 5px solid #3498db; }
-.photo { border-top: 5px solid #9b59b6; }
-.total { border-top: 5px solid #ff772e; }
-.money { border-top: 5px solid #f1c40f; }
-.highlight .label { color: #aaa; }
-.highlight .value { color: #42b983; }
+.finished {
+  border-top: 5px solid #42b983;
+}
+.active {
+  border-top: 5px solid #3498db;
+}
+.photo {
+  border-top: 5px solid #9b59b6;
+}
+.total {
+  border-top: 5px solid #ff772e;
+}
+.money {
+  border-top: 5px solid #f1c40f;
+}
+.highlight .label {
+  color: #aaa;
+}
+.highlight .value {
+  color: #42b983;
+}
 
 @media (max-width: 600px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>

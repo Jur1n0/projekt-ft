@@ -25,56 +25,48 @@ export interface Trip {
   memories?: string
 }
 
-
 export const useTripStore = defineStore('tripStore', {
   state: () => ({
-    // Načítanie dát z localStorage pri štarte, ak neexistujú, použije sa prázdne pole
-    trips: JSON.parse(localStorage.getItem('my_trips') || '[]') as Trip[]
+    trips: JSON.parse(localStorage.getItem('my_trips') || '[]') as Trip[],
   }),
 
   getters: {
-    // Základné získavanie dát
     allTrips: (state) => state.trips,
     getTripById: (state) => {
-      return (tripId: number | string) => state.trips.find(t => t.id === Number(tripId))
+      return (tripId: number | string) => state.trips.find((t) => t.id === Number(tripId))
     },
 
-    // Počty výletov podľa stavu
     totalTripsCount: (state) => state.trips.length,
-    completedTripsCount: (state) => state.trips.filter(t => t.completed).length,
-    activeTripsCount: (state) => state.trips.filter(t => !t.completed).length,
+    completedTripsCount: (state) => state.trips.filter((t) => t.completed).length,
+    activeTripsCount: (state) => state.trips.filter((t) => !t.completed).length,
 
-    // Globálne finančné štatistiky
-    totalGlobalBudget: (state) =>
-      state.trips.reduce((sum, trip) => sum + (trip.budget || 0), 0),
+    totalGlobalBudget: (state) => state.trips.reduce((sum, trip) => sum + (trip.budget || 0), 0),
 
     totalGlobalSpent: (state) =>
       state.trips.reduce((sum, trip) => {
-        const tripSpent = trip.itinerary?.reduce((iSum, item) => iSum + item.price, 0) || 0;
-        return sum + tripSpent;
+        const tripSpent = trip.itinerary?.reduce((iSum, item) => iSum + item.price, 0) || 0
+        return sum + tripSpent
       }, 0),
 
-    // Rozpočty rozdelené podľa stavu výletu
     totalBudgetCompleted: (state) =>
-      state.trips.filter(t => t.completed).reduce((sum, t) => sum + (t.budget || 0), 0),
+      state.trips.filter((t) => t.completed).reduce((sum, t) => sum + (t.budget || 0), 0),
 
     totalBudgetActive: (state) =>
-      state.trips.filter(t => !t.completed).reduce((sum, t) => sum + (t.budget || 0), 0),
+      state.trips.filter((t) => !t.completed).reduce((sum, t) => sum + (t.budget || 0), 0),
 
-    // Ostatné zaujímavosti
     totalPhotosCount: (state) =>
       state.trips.reduce((sum, trip) => sum + (trip.photos?.length || 0), 0),
 
     averageTripBudget: (state) => {
-      if (state.trips.length === 0) return 0;
-      const total = state.trips.reduce((sum, t) => sum + (t.budget || 0), 0);
-      return Math.round(total / state.trips.length);
+      if (state.trips.length === 0) return 0
+      const total = state.trips.reduce((sum, t) => sum + (t.budget || 0), 0)
+      return Math.round(total / state.trips.length)
     },
 
     mostExpensiveTrip: (state) => {
-      if (state.trips.length === 0) return null;
-      return [...state.trips].sort((a, b) => b.budget - a.budget)[0];
-    }
+      if (state.trips.length === 0) return null
+      return [...state.trips].sort((a, b) => b.budget - a.budget)[0]
+    },
   },
 
   actions: {
@@ -86,18 +78,18 @@ export const useTripStore = defineStore('tripStore', {
       this.trips.push({
         ...trip,
         completed: false,
-        memories: ''
+        memories: '',
       })
       this.saveToLocalStorage()
     },
 
     deleteTrip(id: number) {
-      this.trips = this.trips.filter(t => t.id !== id)
+      this.trips = this.trips.filter((t) => t.id !== id)
       this.saveToLocalStorage()
     },
 
     updateTripBudget(tripId: number, newBudget: number) {
-      const trip = this.trips.find(t => t.id === tripId)
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip) {
         trip.budget = newBudget
         this.saveToLocalStorage()
@@ -105,7 +97,7 @@ export const useTripStore = defineStore('tripStore', {
     },
 
     addItineraryItem(tripId: number, item: ItineraryItem) {
-      const trip = this.trips.find(t => t.id === tripId)
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip) {
         trip.itinerary.push(item)
         this.saveToLocalStorage()
@@ -113,17 +105,16 @@ export const useTripStore = defineStore('tripStore', {
     },
 
     deleteItineraryItem(tripId: number, itemId: number) {
-      const trip = this.trips.find(t => t.id === tripId)
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip) {
-        trip.itinerary = trip.itinerary.filter(i => i.id !== itemId)
+        trip.itinerary = trip.itinerary.filter((i) => i.id !== itemId)
         this.saveToLocalStorage()
       }
     },
 
     addPhoto(tripId: number, photo: TripPhoto) {
-      const trip = this.trips.find(t => t.id === tripId)
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip) {
-        // Inicializácia poľa photos, ak by náhodou v starších dátach chýbalo
         if (!trip.photos) trip.photos = []
         trip.photos.push(photo)
         this.saveToLocalStorage()
@@ -131,24 +122,25 @@ export const useTripStore = defineStore('tripStore', {
     },
 
     deletePhoto(tripId: number, photoId: number) {
-      const trip = this.trips.find(t => t.id === tripId)
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip && trip.photos) {
-        trip.photos = trip.photos.filter(p => p.id !== photoId)
+        trip.photos = trip.photos.filter((p) => p.id !== photoId)
         this.saveToLocalStorage()
       }
     },
 
     setCoverPhoto(tripId: number, photoUrl: string) {
-      const trip = this.trips.find(t => t.id === tripId);
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip) {
-        const defaultIllustration = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500';
-        trip.image = (trip.image === photoUrl) ? defaultIllustration : photoUrl;
-        this.saveToLocalStorage();
+        const defaultIllustration =
+          'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500'
+        trip.image = trip.image === photoUrl ? defaultIllustration : photoUrl
+        this.saveToLocalStorage()
       }
     },
 
     updateTripStatus(tripId: number, status: boolean, memories: string = '') {
-      const trip = this.trips.find(t => t.id === tripId)
+      const trip = this.trips.find((t) => t.id === tripId)
       if (trip) {
         trip.completed = status
         trip.memories = memories

@@ -12,26 +12,38 @@ export default {
       isEditingBudget: false,
       tempBudget: 0,
       showMemoryForm: false,
-      memoriesText: ''
+      memoriesText: '',
+      isExpanded: false,
     }
   },
   computed: {
     trip() {
       return useTripStore().getTripById(this.id)
-    }
+    },
+    truncatedMemories() {
+      if (!this.trip || !this.trip.memories) return ''
+      if (this.isExpanded || this.trip.memories.length <= 85) {
+        return this.trip.memories
+      }
+      return this.trip.memories.substring(0, 85) + '...'
+    },
   },
   methods: {
     startEditBudget() {
-      this.tempBudget = this.trip.budget
-      this.isEditingBudget = true
+      if (this.trip) {
+        this.tempBudget = this.trip.budget
+        this.isEditingBudget = true
+      }
     },
     saveBudget() {
       useTripStore().updateTripBudget(Number(this.id), this.tempBudget)
       this.isEditingBudget = false
     },
     openCompleteModal() {
-      this.memoriesText = this.trip.memories || ''
-      this.showMemoryForm = true
+      if (this.trip) {
+        this.memoriesText = this.trip.memories || ''
+        this.showMemoryForm = true
+      }
     },
     saveCompletion() {
       if (this.memoriesText.trim() === '') {
@@ -40,16 +52,16 @@ export default {
       }
       useTripStore().updateTripStatus(Number(this.id), true, this.memoriesText)
       this.showMemoryForm = false
-      // Po uložení presmerujeme do histórie, kde výlet po novom patrí
       this.$router.push('/history')
     },
     revertTrip() {
-      const confirmMsg = 'Naozaj chcete vrátiť tento výlet medzi plánované? Všetky zapísané spomienky a označenie o ukončení sa nenávratne zmažú.'
+      const confirmMsg =
+        'Naozaj chcete vrátiť tento výlet medzi plánované? Všetky zapísané spomienky a označenie o ukončení sa nenávratne zmažú.'
       if (confirm(confirmMsg)) {
         useTripStore().updateTripStatus(Number(this.id), false, '')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -57,9 +69,7 @@ export default {
   <div v-if="trip" class="detail-layout">
     <header class="detail-header">
       <h1>{{ trip.title }}</h1>
-      <router-link to="/" class="back-link">
-        ← Späť na zoznam
-      </router-link>
+      <router-link to="/" class="back-link"> ← Späť na zoznam </router-link>
     </header>
 
     <div v-if="trip.completed" class="completion-banner">
@@ -75,7 +85,7 @@ export default {
 
     <div class="detail-hero">
       <div class="hero-image-container">
-        <img :src="trip.image" :alt="trip.title" class="hero-img">
+        <img :src="trip.image" :alt="trip.title" class="hero-img" />
       </div>
 
       <div class="hero-content">
@@ -84,7 +94,7 @@ export default {
           <button class="btn-edit-small" @click="startEditBudget">Upraviť rozpočet</button>
         </div>
         <div v-else class="budget-edit">
-          <BaseInput v-model.number="tempBudget" type="number" label="Nový rozpočet" />
+          <BaseInput v-model.number="tempBudget" type="number" label="Nový rozpočet" step="100" />
           <button class="btn-save" @click="saveBudget">Uložiť</button>
         </div>
 
@@ -93,9 +103,21 @@ export default {
             ✅ Ukončiť výlet a zapísať spomienky
           </button>
 
-          <div v-if="trip.completed && trip.memories" class="memories-box">
-            <h4>Moje spomienky a ľudia:</h4>
-            <p>{{ trip.memories }}</p>
+          <div v-if="trip.completed && trip.memories" class="memories-journal">
+            <div class="journal-header">
+              <span class="journal-icon">✍️</span>
+              <h4>Moje spomienky</h4>
+            </div>
+            <div class="journal-content">
+              <p>{{ truncatedMemories }}</p>
+              <button
+                v-if="trip.memories.length > 85"
+                @click="isExpanded = !isExpanded"
+                class="btn-read-more"
+              >
+                {{ isExpanded ? 'Zobraziť menej' : 'Čítať viac' }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -133,7 +155,11 @@ export default {
 </template>
 
 <style scoped>
-/* HLAVNÉ ROZLOŽENIE A HLAVIČKA */
+h1 {
+  font-size: 4rem;
+  margin: 0;
+}
+
 .detail-layout {
   max-width: 1000px;
   margin: 0 auto;
@@ -141,28 +167,90 @@ export default {
 
 .detail-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+.back-link,
+.btn-revert,
+.btn-edit-small,
+.btn-save,
+.btn-complete,
+.nav-btn,
+.btn-submit-modal,
+.btn-cancel-modal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.back-link:hover,
+.btn-revert:hover,
+.btn-edit-small:hover,
+.btn-save:hover,
+.btn-complete:hover,
+.nav-btn:hover,
+.btn-submit-modal:hover,
+.btn-cancel-modal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-save,
+.btn-submit-modal,
+.btn-complete {
+  background-color: #42b983;
+  color: white;
+}
+
+.btn-complete {
+  background: linear-gradient(135deg, #42b983 0%, #3aa876 100%);
+  padding: 18px;
+  font-size: 1.05rem;
+  width: 100%;
+}
+
+.btn-save,
+.btn-submit-modal {
+  padding: 12px 24px;
 }
 
 .back-link {
   background-color: #2c3e50;
   color: white;
   padding: 10px 20px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 500;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
 }
 
-.back-link:hover {
-  background-color: #42b983;
-  transform: translateX(-5px);
+.nav-btn,
+.btn-cancel-modal,
+.btn-edit-small {
+  background-color: #f1f3f5;
+  color: #2c3e50;
+  padding: 12px 20px;
+  border: 1px solid #e9ecef;
 }
 
-/* BANNER PRE UKONČENÝ VÝLET */
+.btn-edit-small {
+  font-size: 0.85rem;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-revert {
+  background: #ff4d4d;
+  color: white;
+  padding: 8px 15px;
+  font-size: 0.8rem;
+}
+
 .completion-banner {
   background: #e8f5e9;
   border-left: 5px solid #42b983;
@@ -172,7 +260,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .banner-text {
@@ -181,25 +269,19 @@ export default {
   gap: 15px;
 }
 
-.banner-text .icon { font-size: 1.5rem; }
-.banner-text strong { color: #1b5e20; display: block; }
-.banner-text p { margin: 0; font-size: 0.85rem; color: #4caf50; }
-
-.btn-revert {
-  background: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: bold;
-  transition: opacity 0.2s;
+.banner-text .icon {
+  font-size: 1.5rem;
+}
+.banner-text strong {
+  color: #1b5e20;
+  display: block;
+}
+.banner-text p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #4caf50;
 }
 
-.btn-revert:hover { opacity: 0.9; }
-
-/* HERO SEKCIA (Karta s fotkou a info) */
 .detail-hero {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -207,7 +289,7 @@ export default {
   background: white;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   margin-bottom: 40px;
 }
 
@@ -232,39 +314,13 @@ export default {
   justify-content: space-between;
 }
 
-/* ROZPOČET A ÚPRAVA */
-.budget-display, .budget-edit {
+.budget-display,
+.budget-edit {
   background: #fcfcfc;
   padding: 10px;
   border-radius: 12px;
 }
 
-.btn-edit-small, .btn-save {
-  background: transparent;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
-  padding: 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  width: 100%;
-  margin-top: 10px;
-  transition: all 0.2s;
-}
-
-.btn-edit-small:hover {
-  background: #f8f9fa;
-  color: #2c3e50;
-  border-color: #adb5bd;
-}
-
-.btn-save {
-  background: #42b983;
-  color: white;
-  border: none;
-}
-
-/* AKČNÝ PANEL S TLAČIDLAMI */
 .trip-actions {
   display: flex;
   flex-direction: column;
@@ -272,158 +328,196 @@ export default {
   margin-top: 10px;
 }
 
-/* Hlavné tlačidlo "Ukončiť" s gradientom */
-.btn-complete {
-  background: linear-gradient(135deg, #42b983 0%, #3aa876 100%);
-  color: white;
-  border: none;
-  padding: 18px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(66, 185, 131, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.btn-complete:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(66, 185, 131, 0.4);
-}
-
-/* Skupina navigačných tlačidiel */
 .sub-navigation-links {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.nav-btn {
+.memories-journal {
+  background: #fffce3;
+  padding: 25px;
+  border-radius: 4px;
+  border-left: 4px solid #42b983;
+  box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.journal-content {
+  background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
+  background-size: 100% 2.2rem;
+  line-height: 2.2rem;
+  margin-top: 10px;
+}
+
+.journal-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 12px;
-  background: #f1f3f5;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.journal-icon {
+  font-size: 1.2rem;
+}
+
+.memories-journal h4 {
+  margin: 0;
   color: #2c3e50;
-  text-decoration: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  border: 1px solid #e9ecef;
-}
-
-.nav-btn:hover {
-  background: #e9ecef;
-  color: #42b983;
-}
-
-/* BOX SO SPOMIENKAMI */
-.memories-box {
-  background: #fff5f5;
-  padding: 20px;
-  border-radius: 15px;
-  border-left: 5px solid #ff4d4d;
-  box-shadow: inset 0 0 10px rgba(255, 77, 77, 0.05);
-}
-
-.memories-box h4 {
-  margin: 0 0 8px 0;
-  color: #ff4d4d;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.memories-box p {
+.memories-journal p {
   margin: 0;
-  line-height: 1.6;
-  color: #2c3e50;
+  color: #4a5568;
   font-style: italic;
+  font-family: 'Georgia', serif;
   white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
-/* MODÁLNE OKNO */
+.btn-read-more {
+  background: none;
+  border: none;
+  color: #42b983;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 5px 0;
+  text-decoration: underline;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.65);
+  background: rgba(15, 23, 42, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(8px);
+  padding: 20px;
 }
 
 .modal-window {
   background: white;
-  padding: 35px;
-  border-radius: 20px;
-  width: 95%;
-  max-width: 500px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  padding: 40px;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 550px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-window h3 {
+  color: #1e293b;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.modal-window p {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 24px;
 }
 
 .memory-textarea {
   width: 100%;
-  height: 140px;
-  margin: 20px 0;
-  padding: 15px;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  resize: none;
+  height: 150px;
+  margin: 0 0 24px 0;
+  padding: 16px;
+  border: 2px solid #f1f5f9;
+  border-radius: 16px;
+  background-color: #f8fafc;
   font-family: inherit;
   font-size: 1rem;
-  transition: border-color 0.2s;
+  color: #334155;
+  resize: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .memory-textarea:focus {
   outline: none;
   border-color: #42b983;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(66, 185, 131, 0.1);
 }
 
 .modal-buttons {
   display: flex;
+  flex-direction: row-reverse;
   gap: 12px;
 }
 
 .btn-submit-modal {
-  background: #42b983;
+  flex: 2;
+  background: linear-gradient(135deg, #42b983 0%, #3aa876 100%);
   color: white;
   border: none;
-  padding: 14px;
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: 14px;
   cursor: pointer;
-  flex: 2;
-  font-weight: bold;
-  transition: background 0.2s;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(66, 185, 131, 0.2);
 }
 
-.btn-submit-modal:hover { background: #3aa876; }
+.btn-submit-modal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(66, 185, 131, 0.3);
+  background: linear-gradient(135deg, #48c78e 0%, #3fb680 100%);
+}
 
 .btn-cancel-modal {
-  background: #f1f3f5;
-  border: none;
-  padding: 14px;
-  border-radius: 10px;
-  cursor: pointer;
   flex: 1;
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  cursor: pointer;
   font-weight: 600;
+  transition: all 0.2s;
 }
 
-/* RESPONZIVITA */
+.btn-cancel-modal:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
 @media (max-width: 600px) {
   .sub-navigation-links {
     grid-template-columns: 1fr;
   }
-
   .hero-image-container {
     height: 250px;
+  }
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
 </style>

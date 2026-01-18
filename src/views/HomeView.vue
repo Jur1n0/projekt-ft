@@ -7,7 +7,7 @@ export default {
   name: 'HomeView',
   components: {
     TripCard,
-    BaseInput
+    BaseInput,
   },
   data() {
     return {
@@ -16,14 +16,15 @@ export default {
         title: '',
         description: '',
         budget: 0,
-        image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500'
-      }
+        image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500',
+      },
     }
   },
   computed: {
     trips() {
       const tripStore = useTripStore()
-      return tripStore.allTrips.filter(t => !t.completed)    }
+      return tripStore.allTrips.filter((t) => !t.completed)
+    },
   },
   methods: {
     toggleForm() {
@@ -48,7 +49,7 @@ export default {
         itinerary: [],
         photos: [],
         completed: false,
-        memories: ''
+        memories: '',
       })
 
       this.resetForm()
@@ -58,11 +59,11 @@ export default {
         title: '',
         description: '',
         budget: 0,
-        image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500'
+        image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500',
       }
       this.isFormVisible = false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -77,36 +78,24 @@ export default {
 
     <div v-if="isFormVisible" class="form-container">
       <h2>Kam sa chystáte?</h2>
-      <BaseInput
-        v-model="newTrip.title"
-        label="Cieľová destinácia"
-        placeholder="napr. Paríž"
-      />
+      <BaseInput v-model="newTrip.title" label="Cieľová destinácia" placeholder="napr. Paríž" />
       <BaseInput
         v-model="newTrip.description"
         label="Popis výletu"
         placeholder="Krátky popis plánu..."
       />
-      <BaseInput
-        v-model.number="newTrip.budget"
-        type="number"
-        step="100"
-        label="Rozpočet (€)"
-      />
+      <BaseInput v-model.number="newTrip.budget" type="number" step="100" label="Rozpočet (€)" />
       <button class="btn-submit" @click="submitForm">Uložiť plán</button>
     </div>
 
     <div class="trip-grid">
-      <TripCard
-        v-for="trip in trips"
-        :key="trip.id"
-        :trip="trip"
-        @delete="handleDelete"
-      />
+      <TripCard v-for="trip in trips" :key="trip.id" :trip="trip" @delete="handleDelete" />
     </div>
 
     <div v-if="trips.length === 0" class="empty-state">
-      <p>Zatiaľ nemáte žiadne naplánované výlety. Kliknite na tlačidlo vyššie a začnite plánovať!</p>
+      <p>
+        Zatiaľ nemáte žiadne naplánované výlety. Kliknite na tlačidlo vyššie a začnite plánovať!
+      </p>
     </div>
   </div>
 </template>
@@ -126,17 +115,19 @@ export default {
 }
 
 .btn-primary {
-  background-color: #2c3e50;
+  background-color: #42b983;
   color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  transition: all 0.2s ease-in-out;
 }
 
-.btn-primary:hover{
-  background: #42b983;
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 34, 34, 0.1);
 }
 
 .form-container {
@@ -161,6 +152,12 @@ export default {
   font-weight: bold;
   font-size: 1rem;
   margin-top: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 34, 34, 0.1);
 }
 
 .trip-grid {

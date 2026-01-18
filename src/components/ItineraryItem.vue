@@ -4,9 +4,9 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 }
 </script>
 
@@ -48,8 +48,8 @@ export default {
   margin-right: 12px;
   font-weight: bold;
   display: inline-block;
-  width: 100px;        /* Nastav podľa najdlhšieho slova (UBYTOVANIE) */
-  text-align: center;   /* Voliteľné: vycentruje text vnútri štítka */
+  width: 100px;
+  text-align: center;
 }
 
 .item-place {

@@ -1,9 +1,9 @@
 <script lang="ts">
 export interface ItineraryItem {
-  id: number;
-  place: string;
-  type: string;
-  price: number;
+  id: number
+  place: string
+  type: string
+  price: number
 }
 
 export default {
@@ -11,24 +11,24 @@ export default {
   props: {
     totalBudget: {
       type: Number,
-      required: true
+      required: true,
     },
     itinerary: {
       type: Array as () => ItineraryItem[],
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     totalSpent(): number {
-      return this.itinerary.reduce((sum, item) => sum + item.price, 0);
+      return this.itinerary.reduce((sum, item) => sum + item.price, 0)
     },
     remainingBudget(): number {
-      return this.totalBudget - this.totalSpent;
+      return this.totalBudget - this.totalSpent
     },
     isOverBudget(): boolean {
-      return this.remainingBudget < 0;
-    }
-  }
+      return this.remainingBudget < 0
+    },
+  },
 }
 </script>
 
@@ -48,9 +48,7 @@ export default {
         {{ remainingBudget }} €
       </strong>
     </div>
-    <div v-if="isOverBudget" class="warning-msg">
-      Pozor! Prekročili ste rozpočet!
-    </div>
+    <div v-if="isOverBudget" class="warning-msg">Pozor! Prekročili ste rozpočet!</div>
   </div>
 </template>
 

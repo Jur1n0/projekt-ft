@@ -4,34 +4,30 @@ export default {
   props: {
     trip: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['delete'],
   methods: {
     handleDelete() {
       this.$emit('delete', this.trip.id)
-    }
-  }
+    },
+  },
 }
 </script>
 
 <template>
   <div class="card">
-    <img :src="trip.image" :alt="trip.title" class="card-img">
+    <img :src="trip.image" :alt="trip.title" class="card-img" />
     <div class="card-content">
       <h3 class="card-title">{{ trip.title }}</h3>
       <p class="card-desc">{{ trip.description }}</p>
       <div class="card-meta">
         <span class="card-budget">{{ trip.budget }} €</span>
         <div class="card-actions">
-          <router-link :to="'/trip/' + trip.id" class="btn-detail">
-            Detail
-          </router-link>
+          <router-link :to="'/trip/' + trip.id" class="btn-detail"> Detail </router-link>
 
-          <button class="btn-delete" @click="handleDelete">
-            ✕
-          </button>
+          <button class="btn-delete" @click="handleDelete">✕</button>
         </div>
       </div>
     </div>
@@ -43,7 +39,7 @@ export default {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-img {
@@ -92,6 +88,7 @@ export default {
   border-radius: 6px;
   font-size: 0.9rem;
   display: inline-block;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-delete {
@@ -101,5 +98,12 @@ export default {
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-delete:hover,
+.btn-detail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 34, 34, 0.1);
 }
 </style>

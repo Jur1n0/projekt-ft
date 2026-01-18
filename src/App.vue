@@ -1,6 +1,6 @@
 <script lang="ts">
 export default {
-  name: 'App'
+  name: 'App',
 }
 </script>
 
@@ -8,9 +8,7 @@ export default {
   <div id="app-container">
     <header class="main-nav">
       <div class="nav-content">
-        <router-link to="/" class="logo">
-          Travel<span>Buddy</span>
-        </router-link>
+        <router-link to="/" class="logo"> Travel<span>Buddy</span> </router-link>
 
         <nav class="nav-links">
           <router-link to="/" class="nav-link">Moje výlety</router-link>
@@ -27,13 +25,12 @@ export default {
     </main>
 
     <footer class="main-footer">
-      <p>&copy; 2024 TravelBuddy - tvoj pomocník na cestách</p>
+      <p>Daniš Juraj - TravelBuddy - 2026</p>
     </footer>
   </div>
 </template>
 
 <style>
-/* Globálne resety pre celý projekt */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -49,7 +46,7 @@ body {
 
 .main-nav {
   background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -90,12 +87,6 @@ body {
 
 .nav-link:hover {
   color: #42b983;
-}
-
-/* Automatická trieda pre aktívny odkaz v menu */
-.router-link-active:not(.logo) {
-  color: #42b983;
-  border-bottom: 2px solid #42b983;
 }
 
 .page-content {

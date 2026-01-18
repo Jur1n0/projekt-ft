@@ -5,8 +5,8 @@ import TripItineraryView from '../views/TripItineraryView.vue'
 import TipView from '../views/TipView.vue'
 import GalleryView from '../views/GalleryView.vue'
 import TripGalleryView from '../views/TripGalleryView.vue'
-import StatsView from "@/views/StatsView.vue";
-import HistoryView from "@/views/HistoryView.vue";
+import StatsView from '@/views/StatsView.vue'
+import HistoryView from '@/views/HistoryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,10 +14,9 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
-      // Parent cesta pre detail výletu
       path: '/trip/:id',
       name: 'trip-detail',
       component: TripDetailView,
@@ -27,37 +26,37 @@ const router = createRouter({
           path: 'itinerary',
           name: 'trip-itinerary',
           component: TripItineraryView,
-          props: true
+          props: true,
         },
         {
           path: 'gallery',
           name: 'trip-gallery',
           component: TripGalleryView,
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/tips',
       name: 'tips',
-      component: TipView
+      component: TipView,
     },
     {
       path: '/gallery',
       name: 'gallery',
-      component: GalleryView
+      component: GalleryView,
     },
     {
       path: '/stats',
       name: 'stats',
-      component: StatsView
+      component: StatsView,
     },
     {
       path: '/history',
       name: 'history',
-      component: HistoryView
-    }
-  ]
+      component: HistoryView,
+    },
+  ],
 })
 
 export default router

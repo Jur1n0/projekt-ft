@@ -6,8 +6,8 @@ export default {
   computed: {
     trips() {
       return useTripStore().allTrips
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -21,7 +21,7 @@ export default {
         :to="'/trip/' + trip.id + '/gallery'"
         class="trip-gallery-card"
       >
-        <img :src="trip.image" :alt="trip.title" class="card-img">
+        <img :src="trip.image" :alt="trip.title" class="card-img" />
         <div class="card-overlay">
           <h3>{{ trip.title }}</h3>
         </div>
@@ -33,7 +33,7 @@ export default {
 <style scoped>
 .trip-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 v riadku */
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
   padding: 20px 0;
 }
@@ -45,7 +45,7 @@ export default {
   overflow: hidden;
   text-decoration: none;
   transition: transform 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .trip-gallery-card:hover {
@@ -77,10 +77,18 @@ export default {
   color: white;
   margin: 0;
   font-size: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
 
-@media (max-width: 900px) { .trip-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .trip-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .trip-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .trip-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

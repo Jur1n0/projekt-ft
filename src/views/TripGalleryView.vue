@@ -8,7 +8,7 @@ export default {
   props: ['id'],
   data() {
     return {
-      newPhoto: { url: '', date: '' }
+      newPhoto: { url: '', date: '' },
     }
   },
   computed: {
@@ -16,47 +16,47 @@ export default {
       return useTripStore().getTripById(this.id)
     },
     groupedPhotos() {
-      if (!this.trip?.photos) return {};
+      if (!this.trip?.photos) return {}
 
       return this.trip.photos.reduce((groups: any, photo) => {
-        let displayDate = 'Bez dátumu';
+        let displayDate = 'Bez dátumu'
 
         if (photo.date) {
-          const [year, month, day] = photo.date.split('-');
-          displayDate = `${day}.${month}.${year}`;
+          const [year, month, day] = photo.date.split('-')
+          displayDate = `${day}.${month}.${year}`
         }
 
         if (!groups[displayDate]) {
-          groups[displayDate] = [];
+          groups[displayDate] = []
         }
-        groups[displayDate].push(photo);
-        return groups;
-      }, {});
-    }
+        groups[displayDate].push(photo)
+        return groups
+      }, {})
+    },
   },
   methods: {
     savePhoto() {
       if (!this.newPhoto.url.trim() || !this.newPhoto.date) {
-        alert('Prosím, vyplňte URL fotky aj dátum.');
-        return;
+        alert('Prosím, vyplňte URL fotky aj dátum.')
+        return
       }
 
       useTripStore().addPhoto(Number(this.id), {
         ...this.newPhoto,
-        id: Date.now()
-      });
+        id: Date.now(),
+      })
 
-      this.newPhoto = { url: '', date: '' };
+      this.newPhoto = { url: '', date: '' }
     },
     removePhoto(photoId: number) {
       if (confirm('Naozaj chcete vymazať túto fotku?')) {
-        useTripStore().deletePhoto(Number(this.id), photoId);
+        useTripStore().deletePhoto(Number(this.id), photoId)
       }
     },
     makeCover(url: string) {
-      useTripStore().setCoverPhoto(Number(this.id), url);
-    }
-  }
+      useTripStore().setCoverPhoto(Number(this.id), url)
+    },
+  },
 }
 </script>
 
@@ -66,7 +66,11 @@ export default {
       <h3>Galéria</h3>
       <div class="photo-form">
         <h3>Pridať novú fotku</h3>
-        <BaseInput v-model="newPhoto.url" label="URL fotky *" placeholder="http://localhost:5173/images/barcelona/photo1.jpg" />
+        <BaseInput
+          v-model="newPhoto.url"
+          label="URL fotky *"
+          placeholder="http://localhost:5173/images/barcelona/photo1.jpg"
+        />
         <BaseInput v-model="newPhoto.date" type="date" label="Dátum *" />
         <button @click="savePhoto" class="btn-add">Uložiť fotku</button>
       </div>
@@ -75,8 +79,12 @@ export default {
         <h3 class="date-title">{{ date }}</h3>
         <div class="photo-grid">
           <div v-for="photo in photos" :key="photo.id" class="photo-item">
-            <div class="image-wrapper" :class="{ 'is-cover': trip.image === photo.url }" @click="makeCover(photo.url)">
-              <img :src="photo.url" class="gallery-img">
+            <div
+              class="image-wrapper"
+              :class="{ 'is-cover': trip.image === photo.url }"
+              @click="makeCover(photo.url)"
+            >
+              <img :src="photo.url" class="gallery-img" alt="photo"/>
               <div v-if="trip.image === photo.url" class="cover-badge">★</div>
               <button @click.stop="removePhoto(photo.id)" class="btn-delete-photo">✕</button>
             </div>
@@ -88,7 +96,7 @@ export default {
 </template>
 
 <style scoped>
-h3{
+h3 {
   color: #42b983;
   font-size: 1.7rem;
   margin: 0;
@@ -99,7 +107,7 @@ h3{
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .photo-form h3 {
@@ -156,7 +164,7 @@ h3{
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .gallery-img {
@@ -204,7 +212,6 @@ h3{
   background: #ff4d4d;
 }
 
-
 .btn-add {
   width: 100%;
   padding: 10px;
@@ -214,9 +221,11 @@ h3{
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+  transition: all 0.2s ease-in-out;
 }
 
-.btn-add:hover{
-  background: #42b983;
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 34, 34, 0.1);
 }
 </style>

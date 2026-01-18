@@ -4,32 +4,32 @@ export default {
   props: {
     label: {
       type: String,
-      default: ''
+      default: '',
     },
     modelValue: {
       type: [String, Number],
-      default: ''
+      default: '',
     },
     type: {
       type: String,
-      default: 'text'
+      default: 'text',
     },
     placeholder: {
       type: String,
-      default: ''
+      default: '',
     },
     step: {
       type: [String, Number],
-      default: 1
-    }
+      default: 1,
+    },
   },
   emits: ['update:modelValue'],
   methods: {
     handleInput(event: Event) {
-      const target = event.target as HTMLInputElement;
-      this.$emit('update:modelValue', target.value);
-    }
-  }
+      const target = event.target as HTMLInputElement
+      this.$emit('update:modelValue', target.value)
+    },
+  },
 }
 </script>
 

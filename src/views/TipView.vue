@@ -8,23 +8,23 @@ export default {
           id: 1,
           title: 'Ako ušetriť na letenkách',
           content: 'Používajte inkognito režim v prehliadači a hľadajte lety v utorok poobede.',
-          category: 'Peniaze'
+          category: 'Peniaze',
         },
         {
           id: 2,
           title: 'Balenie na ľahko',
           content: 'Oblečenie nerolujte, ale ukladajte na plocho. Využite vákuové vrecia.',
-          category: 'Balenie'
+          category: 'Balenie',
         },
         {
           id: 3,
           title: 'Lokálna gastronómia',
           content: 'Vyhýbajte sa reštauráciám s obrázkovým menu pri hlavných pamiatkach.',
-          category: 'Jedlo'
-        }
-      ]
+          category: 'Jedlo',
+        },
+      ],
     }
-  }
+  },
 }
 </script>
 
@@ -66,7 +66,7 @@ export default {
   background: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border-top: 4px solid #42b983;
 }
 

@@ -7,9 +7,9 @@ export default {
   components: { TripCard },
   computed: {
     completedTrips() {
-      return useTripStore().allTrips.filter(t => t.completed)
-    }
-  }
+      return useTripStore().allTrips.filter((t) => t.completed)
+    },
+  },
 }
 </script>
 
@@ -21,11 +21,7 @@ export default {
     </header>
 
     <div class="trip-grid">
-      <TripCard
-        v-for="trip in completedTrips"
-        :key="trip.id"
-        :trip="trip"
-      />
+      <TripCard v-for="trip in completedTrips" :key="trip.id" :trip="trip" />
     </div>
 
     <div v-if="completedTrips.length === 0" class="empty-state">
@@ -35,8 +31,23 @@ export default {
 </template>
 
 <style scoped>
-.history-view { max-width: 1100px; margin: 0 auto; padding: 20px; }
-.view-header { margin-bottom: 2rem; text-align: center; }
-.trip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
-.empty-state { text-align: center; margin-top: 4rem; color: #888; }
+.history-view {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.view-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.trip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+.empty-state {
+  text-align: center;
+  margin-top: 4rem;
+  color: #888;
+}
 </style>
